@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://maiishu2367-boop.github.io/Zyvora-/sitemap.xml
