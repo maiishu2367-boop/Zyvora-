@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
+
+  <meta name="theme-color" content="#05070b">
+
+  <meta
+    name="description"
+    content="ZYVORA — Real-Time Journey Intelligence. GPS-powered speed, distance and journey analytics."
+  >
+
+  <meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+  >
+
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+  >
+
+  <title>ZYVORA — Real-Time Journey Intelligence</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     ZYVORA LAUNCH SCREEN
+========================================================= -->
+
+<div id="zyvoraLaunch">
+
+  <div class="launch-glow"></div>
+  <div class="launch-grid"></div>
+
+  <div class="launch-content">
+
+    <div class="launch-logo">
+      Z
+    </div>
+
+    <div class="launch-brand">
+      ZYVORA
+    </div>
+
+    <div class="launch-line"></div>
+
+    <div class="launch-subtitle">
+      REAL-TIME JOURNEY INTELLIGENCE
+    </div>
+
+    <div class="launch-description">
+      GPS-powered speed, distance<br>
+      and journey analytics.
+    </div>
+
+    <button
+      id="enterZyvora"
+      type="button"
+    >
+      <span>ENTER ZYVORA</span>
+      <span class="enter-arrow">→</span>
+    </button>
+
+  </div>
+
+  <div class="launch-credit">
+    Project by <strong>M. Shuja</strong>
+  </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     MAIN APP
+========================================================= -->
+<!-- =========================================================
+     ZYVORA PERMISSION & DEVICE SETUP
+========================================================= -->
+
+<div id="zyvoraSetup" class="zyvora-setup" hidden>
+
+  <div class="setup-card">
+
+    <div class="setup-logo">Z</div>
+
+    <div class="setup-eyebrow">
+      INITIAL DEVICE SETUP
+    </div>
+
+    <h2>Prepare ZYVORA</h2>
+
+    <p class="setup-description">
+      ZYVORA will check the permissions and device features
+      needed for a smooth journey experience.
+    </p>
+
+
+    <div class="permission-list">
+
+      <div class="permission-item">
+
+        <div class="permission-icon">📍</div>
+
+        <div class="permission-info">
+          <strong>Location</strong>
+          <span>Required for GPS tracking</span>
+        </div>
+
+        <span
+          id="locationPermissionStatus"
+          class="permission-status"
+        >
+          CHECKING
+        </span>
+
+      </div>
+
+
+      <div class="permission-item">
+
+        <div class="permission-icon">🔆</div>
+
+        <div class="permission-info">
+          <strong>Screen Wake</strong>
+          <span>Keeps screen awake during journeys</span>
+        </div>
+
+        <span
+          id="wakePermissionStatus"
+          class="permission-status"
+        >
+          CHECKING
+        </span>
+
+      </div>
+
+
+      <div class="permission-item">
+
+        <div class="permission-icon">🔔</div>
+
+        <div class="permission-info">
+          <strong>Notifications</strong>
+          <span>Optional journey notifications</span>
+        </div>
+
+        <span
+          id="notificationPermissionStatus"
+          class="permission-status"
+        >
+          OPTIONAL
+        </span>
+
+      </div>
+
+
+      <div class="permission-item">
+
+        <div class="permission-icon">🧭</div>
+
+        <div class="permission-info">
+          <strong>Device Sensors</strong>
+          <span>Orientation features where supported</span>
+        </div>
+
+        <span
+          id="sensorPermissionStatus"
+          class="permission-status"
+        >
+          AVAILABLE
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="setupMessage"
+      class="setup-message"
+    >
+      Location access is required for ZYVORA.
+    </div>
+
+
+    <button
+      id="setupPermissionButton"
+      class="setup-button"
+      type="button"
+    >
+      ALLOW & CONTINUE
+    </button>
+
+
+    <button
+      id="skipOptionalButton"
+      class="setup-skip"
+      type="button"
+    >
+      Continue without optional features
+    </button>
+
+  </div>
+
+</div>
+<div id="app">
+
+
+  <!-- TOP BAR -->
+
+  <header class="top-bar">
+
+    <div class="brand">
+
+      <div class="brand-mark">
+        Z
+      </div>
+
+      <div class="brand-text">
+
+        <h1>ZYVORA</h1>
+
+        <span>
+          REAL-TIME JOURNEY INTELLIGENCE
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="top-actions">
+
+      <button
+        id="historyButton"
+        class="icon-button"
+        type="button"
+        aria-label="Journey history"
+      >
+        ☰
+      </button>
+
+    </div>
+
+  </header>
+
+
+
+  <!-- GPS STATUS -->
+
+  <div class="gps-status">
+
+    <span
+      id="gpsDot"
+      class="status-dot"
+    ></span>
+
+    <span id="gpsStatus">
+      GPS READY
+    </span>
+
+  </div>
+
+
+
+  <!-- MAIN -->
+
+  <main class="main-content">
+
+
+    <!-- SPEED CARD -->
+
+    <section class="speed-card">
+
+      <div class="speed-card-glow"></div>
+
+      <div class="speed-radar"></div>
+      <div class="speed-radar radar-two"></div>
+
+      <div class="speed-label">
+        CURRENT SPEED
+      </div>
+
+
+      <div class="speedometer">
+
+        <div class="speed-ring">
+
+          <div class="speed-inner">
+
+            <div
+              id="speedValue"
+              class="speed-value"
+            >
+              0
+            </div>
+
+            <div class="speed-unit">
+              km/h
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="speedScale"
+        class="speed-scale"
+      >
+        0 — 20 — 40 — 60 — 80 — 100+
+      </div>
+
+
+      <div
+        id="direction"
+        class="direction"
+      >
+        ●
+      </div>
+
+
+      <div
+        id="speedMessage"
+        class="speed-message"
+      >
+        Ready for your journey
+      </div>
+
+    </section>
+
+
+
+    <!-- LIVE STATS -->
+
+    <section class="stats-grid">
+
+
+      <div class="stat-card">
+
+        <span class="stat-label">
+          DISTANCE
+        </span>
+
+        <strong id="distanceValue">
+          0.00
+        </strong>
+
+        <small>
+          km
+        </small>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <span class="stat-label">
+          AVG SPEED
+        </span>
+
+        <strong id="averageSpeedValue">
+          0
+        </strong>
+
+        <small>
+          km/h
+        </small>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <span class="stat-label">
+          MAX SPEED
+        </span>
+
+        <strong id="maxSpeedValue">
+          0
+        </strong>
+
+        <small>
+          km/h
+        </small>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <span class="stat-label">
+          JOURNEY TIME
+        </span>
+
+        <strong id="journeyTimeValue">
+          00:00:00
+        </strong>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- CONTROLS -->
+
+    <section class="controls">
+
+      <button
+        id="startButton"
+        class="primary-button"
+        type="button"
+      >
+        ▶ Start Journey
+      </button>
+
+
+      <div class="secondary-controls">
+
+        <button
+          id="pauseButton"
+          class="control-button"
+          type="button"
+        >
+          ⏸ Pause
+        </button>
+
+        <button
+          id="stopButton"
+          class="control-button"
+          type="button"
+        >
+          ■ Stop
+        </button>
+
+        <button
+          id="resetButton"
+          class="control-button"
+          type="button"
+        >
+          ↻ Reset
+        </button>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- JOURNEY INTELLIGENCE -->
+
+    <section class="panel">
+
+      <div class="panel-header">
+
+        <div>
+
+          <span class="panel-eyebrow">
+            LIVE DATA
+          </span>
+
+          <h2>
+            Journey Intelligence
+          </h2>
+
+        </div>
+
+      </div>
+
+
+      <div class="intelligence-grid">
+
+
+        <div class="data-row">
+
+          <span>
+            Location
+          </span>
+
+          <strong id="locationValue">
+            Waiting for GPS
+          </strong>
+
+        </div>
+
+
+        <div class="data-row">
+
+          <span>
+            Latitude
+          </span>
+
+          <strong id="latitudeValue">
+            —
+          </strong>
+
+        </div>
+
+
+        <div class="data-row">
+
+          <span>
+            Longitude
+          </span>
+
+          <strong id="longitudeValue">
+            —
+          </strong>
+
+        </div>
+
+
+        <div class="data-row">
+
+          <span>
+            GPS Accuracy
+          </span>
+
+          <strong id="accuracyValue">
+            —
+          </strong>
+
+        </div>
+
+
+        <div class="data-row">
+
+          <span>
+            Direction
+          </span>
+
+          <strong id="directionValue">
+            —
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- JOURNEY TIMELINE -->
+
+    <section class="panel">
+
+      <div class="panel-header">
+
+        <div>
+
+          <span class="panel-eyebrow">
+            JOURNEY
+          </span>
+
+          <h2>
+            Journey Timeline
+          </h2>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="journeyTimeline"
+        class="timeline"
+      >
+
+        <div class="timeline-empty">
+          Start a journey to build your timeline.
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- PERSONAL RECORDS -->
+
+    <section class="panel">
+
+      <div class="panel-header">
+
+        <div>
+
+          <span class="panel-eyebrow">
+            YOUR DATA
+          </span>
+
+          <h2>
+            Personal Records
+          </h2>
+
+        </div>
+
+      </div>
+
+
+      <div class="records-grid">
+
+
+        <div class="record-card">
+
+          <span>
+            FASTEST SPEED
+          </span>
+
+          <strong id="recordFastest">
+            0 km/h
+          </strong>
+
+        </div>
+
+
+        <div class="record-card">
+
+          <span>
+            LONGEST JOURNEY
+          </span>
+
+          <strong id="recordLongest">
+            0 km
+          </strong>
+
+        </div>
+
+
+        <div class="record-card">
+
+          <span>
+            LONGEST DURATION
+          </span>
+
+          <strong id="recordDuration">
+            00:00:00
+          </strong>
+
+        </div>
+
+
+        <div class="record-card">
+
+          <span>
+            JOURNEYS
+          </span>
+
+          <strong id="recordJourneys">
+            0
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- PREVIOUS JOURNEYS -->
+
+    <section class="panel">
+
+      <div class="panel-header">
+
+        <div>
+
+          <span class="panel-eyebrow">
+            HISTORY
+          </span>
+
+          <h2>
+            Previous Journeys
+          </h2>
+
+        </div>
+
+
+        <button
+          id="clearHistoryButton"
+          class="text-button"
+          type="button"
+        >
+          Clear
+        </button>
+
+      </div>
+
+
+      <div
+        id="previousJourneys"
+        class="previous-journeys"
+      >
+
+        <div class="history-empty">
+          No previous journeys yet.
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- JOURNEY REPORT -->
+
+    <section class="panel report-panel">
+
+      <div class="panel-header">
+
+        <div>
+
+          <span class="panel-eyebrow">
+            ANALYTICS
+          </span>
+
+          <h2>
+            Journey Report
+          </h2>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="journeyReport"
+        class="journey-report"
+      >
+
+        <div class="report-empty">
+          Complete a journey to generate your report.
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- FEATURES -->
+
+    <section class="features-section">
+
+      <span class="panel-eyebrow">
+        ZYVORA
+      </span>
+
+      <h2>
+        Real-Time Journey Intelligence
+      </h2>
+
+      <p>
+        Track your movement, understand your journey,
+        and turn GPS data into meaningful travel insights.
+      </p>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- FOOTER -->
+
+  <footer class="app-footer">
+
+    <div>
+      ZYVORA
+    </div>
+
+    <span>
+      Project by M. Shuja
+    </span>
+
+  </footer>
+
+</div>
+
+
+
+<!-- =========================================================
+     HISTORY OVERLAY
+========================================================= -->
+
+<div
+  id="historyOverlay"
+  class="drawer-overlay"
+  hidden
+>
+</div>
+
+
+
+<!-- =========================================================
+     HISTORY DRAWER
+========================================================= -->
+
+<aside
+  id="historyDrawer"
+  class="history-drawer"
+  aria-hidden="true"
+>
+
+  <div class="drawer-header">
+
+    <div>
+
+      <span class="panel-eyebrow">
+        ZYVORA
+      </span>
+
+      <h2>
+        Journey History
+      </h2>
+
+    </div>
+
+
+    <button
+      id="closeHistoryButton"
+      class="drawer-close"
+      type="button"
+      aria-label="Close history"
+    >
+      ×
+    </button>
+
+  </div>
+
+
+  <div
+    id="drawerHistoryList"
+    class="drawer-history-list"
+  >
+
+    <div class="history-empty">
+
+      <span class="history-empty-icon">
+        ◷
+      </span>
+
+      <p>
+        Your previous journeys will appear here.
+      </p>
+
+    </div>
+
+  </div>
+
+</aside>
+
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+  id="toast"
+  class="toast"
+  aria-live="polite"
+>
+</div>
+
+
+
+<!-- =========================================================
+     ENTER ZYVORA — GUARANTEED CLICK HANDLER
+========================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  const launch = document.getElementById("zyvoraLaunch");
+  const enterButton = document.getElementById("enterZyvora");
+  const app = document.getElementById("app");
+
+  if (!launch || !enterButton || !app) {
+    return;
+  }
+
+  /* Keep dashboard hidden initially */
+
+  app.style.visibility = "hidden";
+  app.style.opacity = "0";
+  app.style.pointerEvents = "none";
+
+
+  /* Make sure launch screen receives clicks */
+
+  launch.style.pointerEvents = "auto";
+  enterButton.style.pointerEvents = "auto";
+
+
+  enterButton.addEventListener("click", function () {
+
+    enterButton.disabled = true;
+
+    launch.style.transition =
+      "opacity 0.7s ease, transform 0.7s ease";
+
+    launch.style.opacity = "0";
+    launch.style.transform = "scale(1.05)";
+    launch.style.pointerEvents = "none";
+
+
+    setTimeout(function () {
+
+      launch.style.display = "none";
+
+      app.style.visibility = "visible";
+      app.style.opacity = "1";
+      app.style.pointerEvents = "auto";
+
+      document.body.style.overflow = "";
+
+    }, 700);
+
+  });
+
+});
+
+</script>
+
+
+
+<!-- =========================================================
+     MAIN ZYVORA JAVASCRIPT
+========================================================= -->
+
+<script src="script.js"></script>
+
+
+</body>
+
+</html>
